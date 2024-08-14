@@ -9,5 +9,3 @@ def test_database_creation(client):
     for table in expected_tables:
         assert table in actual_tables
         print(f"Table {table} exists in the database")
-
-    
