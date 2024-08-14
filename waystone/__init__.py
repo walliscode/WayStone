@@ -1,5 +1,7 @@
 from flask import Flask
 
+ # import blueprints
+from waystone import home
 
 def create_app(test_config=None):
     app = Flask(
@@ -11,8 +13,9 @@ def create_app(test_config=None):
             test_config
         )  # if test_config is passed, update the app's config with the test_config
 
-    @app.route("/hello")  # create a route for the app using the route() decorator
-    def hello():
-        return "Hello, This Crazy World!"
+   
+    app.register_blueprint(home.bp)  # register the home blueprint
+
+
 
     return app
