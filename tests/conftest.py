@@ -1,6 +1,7 @@
 import pytest
 
 from waystone import create_app
+from waystone.extensions import db
 
 
 @pytest.fixture
@@ -8,10 +9,15 @@ def app():
     app = create_app(
         {
             "TESTING": True,
+            'SQLALCHEMY_DATABASE_URI': "sqlite:///:memory:",
         }
     )  # create instance of Flask, passing config dict with TESTING set to True
 
-    yield app
+    
+    with app.app_context():
+        db.create_all()  # create all tables in the database
+        yield app
+        db.drop_all
 
 
 @pytest.fixture
