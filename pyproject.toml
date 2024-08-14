@@ -1,0 +1,9 @@
+[project]
+name = "waystone"
+version = "0.0.1"
+description = "To create basic db storage and graphical display for projects and milestones"
+
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
