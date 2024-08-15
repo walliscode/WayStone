@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from waystone.extensions import db
-from waystone.models import Project, Criteria
+from waystone.models import Project, Criteria, Milestone
 
 from wtforms import StringField, SubmitField
 from wtforms_sqlalchemy.fields import QuerySelectField
@@ -19,9 +19,32 @@ class CurrentProjectsForm(FlaskForm):
         allow_blank=False,
         get_label=lambda project: "{} - {}".format(
             project.name, project.description
-        ),  # Example of including another field
+        )
     )
 
+
+class NewMilestoneForm(FlaskForm):
+
+    name = StringField("Milestone Name")
+    description = StringField("Milestone Description")
+    link_project = QuerySelectField(
+        "Select Project",
+        query_factory=lambda: db.session.scalars(db.select(Project)).all(),
+        allow_blank=False,
+        get_label=lambda project: "{} - {}".format(project.name, project.description),
+
+    )
+    submit = SubmitField("Add Milestone")
+   
+class CurrentMilestonesForm(FlaskForm):
+    milestone_choices = QuerySelectField(
+        "Select Milestone",
+        query_factory=lambda: db.session.scalars(db.select(Milestone)).all(),
+        allow_blank=False,
+        get_label=lambda milestone: "{} - {} for project {}. {}".format(
+            milestone.name, milestone.description, milestone.project_id, milestone.project.name
+        )
+    )
 
 class NewCriteriaForm(FlaskForm):
     name = StringField("Criteria Name")
