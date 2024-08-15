@@ -3,14 +3,19 @@ from flask import render_template, request
 
 from waystone.project import bp
 from waystone.extensions import db
-from waystone.models import Project
-from .forms import NewProjectForm, ProjectsForm
+from waystone.models import Project, Criteria
+from .forms import (
+    NewProjectForm,
+    CurrentProjectsForm,
+    NewCriteriaForm,
+    CurrentCriteriaForm,
+)
 
 
 @bp.route("/", methods=["GET", "POST"])
 def index():
     form = NewProjectForm()
-    form2 = ProjectsForm()
+    form2 = CurrentProjectsForm()
 
     if request.method == "POST":
         if form.submit.data:
@@ -20,6 +25,18 @@ def index():
             db.session.add(new_project)
             db.session.commit()
 
-   
     return render_template("project/index.html", form=form, form2=form2)
-    
+
+
+@bp.route("/criteria", methods=["GET", "POST"])
+def criteria():
+    form = NewCriteriaForm()
+    form2 = CurrentCriteriaForm()
+
+    if request.method == "POST":
+        if form.submit.data:
+            new_criteria = Criteria(name=form.name.data, unit=form.unit.data)
+            db.session.add(new_criteria)
+            db.session.commit()
+
+    return render_template("project/criteria.html", form=form, form2=form2)
