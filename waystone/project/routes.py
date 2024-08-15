@@ -1,9 +1,9 @@
-from flask import render_template, request
+from flask import render_template, request, session
 
 
 from waystone.project import bp
 from waystone.extensions import db
-from waystone.models import Project, Criteria, Milestone
+from waystone.models import Project, Criteria, Milestone, MilestoneCriteria
 from .forms import (
     NewProjectForm,
     CurrentProjectsForm,
@@ -11,6 +11,7 @@ from .forms import (
     CurrentMilestonesForm,
     NewCriteriaForm,
     CurrentCriteriaForm,
+    NewMilestoneCriteriaForm
 )
 
 
@@ -29,6 +30,7 @@ def index():
 
     return render_template("project/index.html", form=form, form2=form2)
 
+
 @bp.route("/milestone", methods=["GET", "POST"])
 def milestone():
     form = NewMilestoneForm()
@@ -44,10 +46,34 @@ def milestone():
             db.session.add(new_milestone)
             db.session.commit()
 
-   
-  
-
     return render_template("project/milestone.html", form=form, form2=form2)
+
+
+@bp.route("/milestone_criteria", methods=["GET", "POST"])
+def milestone_criteria():
+    form = NewMilestoneCriteriaForm()
+    
+    if request.method == "POST":
+        if form.select_project.data:
+            form.milestone_choices.query_factory = lambda: db.session.scalars(db.select(Milestone).filter(Milestone.project_id == form.project_choices.data.id)).all()
+            session["project"] = {}
+            session["project"]["id"] = form.project_choices.data.id
+            session["project"]["name"] = form.project_choices.data.name
+            session["project"]["description"] = form.project_choices.data.description
+        
+        if form.submit.data:
+            new_milestone_criteria = MilestoneCriteria(
+                milestone_id=form.milestone_choices.data.id,
+                criteria_id=form.criteria_choices.data.id,
+                value = form.value.data
+            )
+            db.session.add(new_milestone_criteria)
+            db.session.commit()
+
+            session.clear()
+        
+       
+    return render_template("project/milestone_criteria.html", form=form)
 
 
 @bp.route("/criteria", methods=["GET", "POST"])

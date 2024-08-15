@@ -3,7 +3,7 @@ from waystone.extensions import db
 
 def test_database_creation(client):
     # test that the created tables are actually created in the database
-    expected_tables = ["project", "milestone", "criteria"]
+    expected_tables = ["project", "milestone", "criteria", "milestone_criteria"]
     actual_tables = db.metadata.tables.keys()
 
     for table in expected_tables:

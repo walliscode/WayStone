@@ -1,0 +1,28 @@
+<div>
+    milestone criteria
+    <form method="post">
+        <fieldset>
+            {{form.project_choices.label}}: {{form.project_choices}}
+            {{form.select_project}}
+        </fieldset>
+
+        {% if session["project"] %}
+        <fieldset>
+            {{form.milestone_choices.label}}: {{form.milestone_choices}}
+             <br>
+             <br>
+            {{form.criteria_choices.label}}: {{form.criteria_choices}}
+             <br>
+             <br>
+            {{form.value.label}}: {{form.value}}
+             <br>
+             <br>
+            {{form.submit}}
+        </fieldset>
+        {% endif %}
+       
+    </form>
+    <div>
+        {{session}}
+    </div>
+</div>
