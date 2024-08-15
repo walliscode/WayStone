@@ -31,3 +31,20 @@ class Criteria(db.Model):
 
     def __repr__(self):
         return f"<Criteria {self.name}>"
+
+
+class MilestoneCriteria(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    milestone_id = db.Column(db.Integer, db.ForeignKey("milestone.id"), nullable=False)
+    criteria_id = db.Column(db.Integer, db.ForeignKey("criteria.id"), nullable=False)
+    value = db.Column(db.Float, nullable=True)
+    milestone = db.relationship(
+        "Milestone", backref=db.backref("milestone_criteria", lazy=True)
+    )
+    criteria = db.relationship(
+        "Criteria", backref=db.backref("milestone_criteria", lazy=True)
+    )
+
+    def __repr__(self):
+        return f"<MilestoneCriteria {self.milestone_id} - {self.criteria_id}>"
