@@ -3,7 +3,7 @@ from waystone.extensions import db
 from waystone import models
 
 # import blueprints
-from waystone import home, project
+from waystone import home, project, diagrams
 
 
 def create_app(test_config=None):
@@ -20,6 +20,7 @@ def create_app(test_config=None):
 
     app.register_blueprint(home.bp)  # register the home blueprint
     app.register_blueprint(project.bp)  # register the project blueprint
+    app.register_blueprint(diagrams.bp)  # register the diagrams blueprint
 
     # register the database
     db.init_app(app)
