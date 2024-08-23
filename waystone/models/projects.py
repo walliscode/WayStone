@@ -48,3 +48,14 @@ class MilestoneCriteria(db.Model):
 
     def __repr__(self):
         return f"<MilestoneCriteria {self.milestone_id} - {self.criteria_id}>"
+
+
+class MileStoneParentChild(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey("milestone.id"), nullable=False)
+    child_id = db.Column(db.Integer, db.ForeignKey("milestone.id"), nullable=False)
+    parent = db.relationship("Milestone", foreign_keys=[parent_id])
+    child = db.relationship("Milestone", foreign_keys=[child_id])
+
+    def __repr__(self):
+        return f"<MilestoneParentChild {self.parent_id} - {self.child_id}>"
