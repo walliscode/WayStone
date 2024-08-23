@@ -2,20 +2,20 @@
 <html lang="en">
 
 <head>
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
     {% include 'common/navbar.html'%}
     {% block title %}{% endblock %}
     <div class="columns">
-        <div class="column_1">
+        <div class="column">
             {% block column_1 %}{% endblock %}
         </div>
-        <div class="column_2">
+        <div class="column">
             {% block column_2 %}{% endblock %}
         </div>
-        <div class="column_3">
+        <div class="column">
             {% block column_3 %}{% endblock %}
         </div>
     </div>
