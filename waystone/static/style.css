@@ -1,0 +1,45 @@
+:root {
+    --color-background: #faf0ca;
+    --color-box: #ee964b;
+    --color-add: #0d3b66;
+    --color-remove: #f95738;
+    --color-edit: #f4d35e;
+}
+
+html {
+    font-family: sans-serif;
+
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    background: var(--color-background);
+}
+
+nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background: var(--color-box);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+div {
+    display: flex;
+}
+.columns {
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.column {
+    flex-direction: column;
+    border: 0.15rem solid black;
+    border-radius: 1rem;
+    background: var(--color-box);
+    width: 20rem;
+    text-align: center;
+}
