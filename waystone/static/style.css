@@ -35,6 +35,8 @@ div {
 
 fieldset {
     border: none;
+    display: flex;
+    flex-direction: column;
 }
 
 .columns {
@@ -64,10 +66,16 @@ fieldset {
     color: white;
 }
 
+.btn-remove {
+    background: var(--color-remove);
+    color: white;
+}
+
 .dropdown select {
     max-width: 100%; /* Prevents the select box from exceeding the width of its container */
     width: 100%; /* Ensures the select box takes up the full width of its container */
     box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+    border-radius: 0.2rem;
 }
 
 input {

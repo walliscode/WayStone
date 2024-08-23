@@ -89,3 +89,28 @@ class NewMilestoneCriteriaForm(FlaskForm):
     )
     value = DecimalField("Value")
     submit = SubmitField("Add Criteria to Milestone")
+
+
+class LinkMileStonesForm(FlaskForm):
+    project_choices = QuerySelectField(
+        "Select Project",
+        query_factory=lambda: db.session.scalars(db.select(Project)).all(),
+        allow_blank=False,
+        get_label=lambda project: "{}".format(project.name),
+    )
+    select_child_project = SubmitField("Select Project")
+    select_parent_project = SubmitField("Select Project")
+
+    milestone_choices = QuerySelectField(
+        "Select Milestone",
+        query_factory=lambda: db.session.scalars(db.select(Milestone)).all(),
+        allow_blank=False,
+        get_label=lambda milestone: "{}".format(milestone.name),
+    )
+
+    select_child_milestone = SubmitField("Select Milestone")
+    select_parent_milestone = SubmitField("Select Milestone")
+
+    link_milestones = SubmitField("Link Milestones")
+
+    reset = SubmitField("Reset")

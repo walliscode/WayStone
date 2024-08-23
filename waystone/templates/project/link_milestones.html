@@ -1,0 +1,90 @@
+{% extends "common/head.html" %}
+
+
+{% block column_1 %}
+<h2>Linking Milestones</h2>
+<p>
+    Select a milestones and give it a parent.
+
+</p>
+<p>
+    N.B. the milestone cannot be given a child, only a parent. To achive this, the "child" milestones must
+    be selected and the parent added.
+</p>
+{% endblock %}
+
+{% block column_2 %}
+<form method="post">
+    {% if "child_project" not in session %}
+    <fieldset>
+        <h2>Pick Project</h2>
+        <div class="dropdown">
+            {{ form.project_choices}}
+        </div>
+        {{form.select_child_project(class = "btn btn-add")}}
+    </fieldset>
+    {% endif %}
+    {% if ("child_project" in session) %}
+    <fieldset>
+        <h2>Project Selected</h2>
+        <p>{{session["child_project"]}}</p>
+    </fieldset>
+    {% if "child_milestone" not in session %}
+    <fieldset>
+        <h2>Pick Milestone</h2>
+        <div class="dropdown">
+            {{ form.milestone_choices}}
+        </div>
+        {{form.select_child_milestone(class = "btn btn-add")}}
+    </fieldset>
+    {% endif %}
+    {% if "child_milestone" in session %}
+    <fieldset>
+        <h2>Milestone Selected</h2>
+        <p>{{session["child_milestone"]}}</p>
+    </fieldset>
+    {% if "parent_project" not in session %}
+    <fieldset>
+        <h2>Pick Parent Project</h2>
+        <div class="dropdown">
+            {{ form.project_choices}}
+        </div>
+        {{form.select_parent_project(class = "btn btn-add")}}
+    </fieldset>
+    {% endif %}
+    {% if "parent_project" in session %}
+    <h2>Parent Project Selected</h2>
+    <p>{{session["parent_project"]}}</p>
+    {% if "parent_milestone" not in session %}
+    <fieldset>
+        <h2>Pick Parent Milestone</h2>
+        <div class="dropdown">
+            {{ form.milestone_choices}}
+        </div>
+        {{form.select_parent_milestone(class = "btn btn-add")}}
+    </fieldset>
+    {% endif %}
+    {% if "parent_milestone" in session %}
+    <h2>Parent Milestone Selected</h2>
+    <p>{{session["parent_milestone"]}}</p>
+    <fieldset>
+        {{form.link_milestones(class = "btn btn-add")}}
+    </fieldset>
+    {% endif %}
+
+    {% endif %}
+    {% endif %}
+    {% endif %}
+
+</form>
+
+{% endblock %}
+
+{% block column_3 %}
+<form method="post">
+
+    <fieldset>
+        {{form.reset(class = "btn btn-remove")}}
+    </fieldset>
+</form>
+{% endblock %}

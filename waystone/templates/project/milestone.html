@@ -1,16 +1,42 @@
-<div>
-    <form method="post">
-        <fieldset>
-            {{form.name.label}}: {{form.name}}
-            {{form.description.label}}: {{form.description}}
-            {{form.link_project.label}}:{{form.link_project}}
-            {{form.submit}}
-        </fieldset>
-    </form>
-    <form >
-        <fieldset>
-           {{form2.milestone_choices.label}}: {{form2.milestone_choices}}
-           
-        </fieldset>
-    </form>
-</div>
+{% extends "common/head.html" %}
+
+
+{% block column_1 %}
+    <h2>Milestones</h2>
+    <p>
+        Add a milestone, description and link to a project
+    </p>
+{% endblock %}
+
+{% block column_2 %}
+<form method="post">
+    <fieldset>
+        {{form.name.label}}
+        {{form.name}}
+        {{form.description.label}}
+        {{form.description}}
+    </fieldset>
+    <fieldset>
+        <div class="dropdown">
+            {{form.link_project.label}}
+            {{form.link_project}}
+        </div>
+    </fieldset>
+    <fieldset>
+        {{form.submit (class = "btn btn-add")}}
+    </fieldset>
+</form>
+{% endblock %}
+
+{% block column_3 %}
+<form>
+    <h2>Current Milestones</h2>
+    <fieldset>
+        <div class="dropdown">
+            {{form2.milestone_choices}}
+        </div>
+
+
+    </fieldset>
+</form>
+{% endblock %}

@@ -3,7 +3,13 @@ from flask import render_template, request, session
 
 from waystone.project import bp
 from waystone.extensions import db
-from waystone.models import Project, Criteria, Milestone, MilestoneCriteria
+from waystone.models import (
+    Project,
+    Criteria,
+    Milestone,
+    MilestoneCriteria,
+    MileStoneParentChild,
+)
 from .forms import (
     NewProjectForm,
     CurrentProjectsForm,
@@ -11,7 +17,8 @@ from .forms import (
     CurrentMilestonesForm,
     NewCriteriaForm,
     CurrentCriteriaForm,
-    NewMilestoneCriteriaForm
+    NewMilestoneCriteriaForm,
+    LinkMileStonesForm,
 )
 
 
@@ -49,30 +56,91 @@ def milestone():
     return render_template("project/milestone.html", form=form, form2=form2)
 
 
+@bp.route("/link_milestones", methods=["GET", "POST"])
+def link_milestones():
+    form = LinkMileStonesForm()
+
+    if request.method == "POST":
+        if form.select_child_project.data:
+            session["child_project"] = {}
+            session["child_project"]["id"] = form.project_choices.data.id
+            session["child_project"]["name"] = form.project_choices.data.name
+
+        if form.select_child_milestone.data:
+            session["child_milestone"] = {}
+            session["child_milestone"]["id"] = form.milestone_choices.data.id
+            session["child_milestone"]["name"] = form.milestone_choices.data.name
+
+        if form.select_parent_project.data:
+            session["parent_project"] = {}
+            session["parent_project"]["id"] = form.project_choices.data.id
+            session["parent_project"]["name"] = form.project_choices.data.name
+
+        if form.select_parent_milestone.data:
+            session["parent_milestone"] = {}
+            session["parent_milestone"]["id"] = form.milestone_choices.data.id
+            session["parent_milestone"]["name"] = form.milestone_choices.data.name
+
+        if form.link_milestones.data:
+            new_milestone_link = MileStoneParentChild(
+                parent_id=session["parent_milestone"]["id"],
+                child_id=session["child_milestone"]["id"],
+            )
+            db.session.add(new_milestone_link)
+            db.session.commit()
+        if form.reset.data:
+            session.clear()
+
+    if "child_project" in session:
+        # update the query factory for milestones by filtering by the child project
+        form.milestone_choices.query_factory = lambda: db.session.scalars(
+            db.select(Milestone).filter(
+                Milestone.project_id == session["child_project"]["id"]
+            )
+        ).all()
+
+        # update the query factory for projects by filtering out the child project so it can't link to istelf
+        form.project_choices.query_factory = lambda: db.session.scalars(
+            db.select(Project).filter(Project.id != session["child_project"]["id"])
+        ).all()
+
+        if "parent_project" in session:
+            form.milestone_choices.query_factory = lambda: db.session.scalars(
+                db.select(Milestone).filter(
+                    Milestone.project_id == session["parent_project"]["id"]
+                )
+            ).all()
+
+    return render_template("project/link_milestones.html", form=form)
+
+
 @bp.route("/milestone_criteria", methods=["GET", "POST"])
 def milestone_criteria():
     form = NewMilestoneCriteriaForm()
-    
+
     if request.method == "POST":
         if form.select_project.data:
-            form.milestone_choices.query_factory = lambda: db.session.scalars(db.select(Milestone).filter(Milestone.project_id == form.project_choices.data.id)).all()
+            form.milestone_choices.query_factory = lambda: db.session.scalars(
+                db.select(Milestone).filter(
+                    Milestone.project_id == form.project_choices.data.id
+                )
+            ).all()
             session["project"] = {}
             session["project"]["id"] = form.project_choices.data.id
             session["project"]["name"] = form.project_choices.data.name
             session["project"]["description"] = form.project_choices.data.description
-        
+
         if form.submit.data:
             new_milestone_criteria = MilestoneCriteria(
                 milestone_id=form.milestone_choices.data.id,
                 criteria_id=form.criteria_choices.data.id,
-                value = form.value.data
+                value=form.value.data,
             )
             db.session.add(new_milestone_criteria)
             db.session.commit()
 
             session.clear()
-        
-       
+
     return render_template("project/milestone_criteria.html", form=form)
 
 
