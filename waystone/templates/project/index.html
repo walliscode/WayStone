@@ -1,23 +1,37 @@
 {% extends "common/head.html" %}
 
+
 {% block column_1 %}
+    <h2>Create a New Project:</h2>
+    <p>
+        Use the form to create a new project, giving it a name and description.
+        The dropdown to the far left contains current projects.
+    </p>
+{% endblock %}
 
-
-
-
-<div>
+{% block column_2 %}
+    <h2>Add Project</h2>
     <form method="post">
-        <fieldset>
+        <fieldset>  
             {{form.name.label }}: {{form.name}}
-            {{form.description.label }}: {{form.description}}
-            {{form.submit}}
         </fieldset>
-    </form>
-    <form >
         <fieldset>
-            {{form2.project_choices.label }}: {{form2.project_choices}}
+            {{form.description.label }}: {{form.description}}
+        </fieldset>
+        <fieldset>
+            {{form.submit (class = "btn btn-add")}}
         </fieldset>
     </form>
-</div>
+    
+{% endblock %}
 
+{% block column_3 %}
+<form >
+    <fieldset>
+        <h2>Current Projects:</h2>
+        <div class="dropdown">
+            {{form2.project_choices}}
+        </div>
+    </fieldset>
+</form>
 {% endblock %}

@@ -7,7 +7,9 @@
 }
 
 html {
-    font-family: sans-serif;
+    font-family: "Roboto", sans-serif;
+
+    font-style: normal;
 
 }
 
@@ -30,6 +32,11 @@ nav {
 div {
     display: flex;
 }
+
+fieldset {
+    border: none;
+}
+
 .columns {
     flex-direction: row;
     justify-content: space-around;
@@ -42,4 +49,30 @@ div {
     background: var(--color-box);
     width: 20rem;
     text-align: center;
+    padding: 1rem;
+}
+
+.btn {
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    cursor: pointer;
+}
+
+.btn-add {
+    background: var(--color-add);
+    color: white;
+}
+
+.dropdown select {
+    max-width: 100%; /* Prevents the select box from exceeding the width of its container */
+    width: 100%; /* Ensures the select box takes up the full width of its container */
+    box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+}
+
+input {
+    padding: 0.5rem;
+    margin: 0.5rem;
+    border-radius: 0.5rem;
+    border: 0.15rem solid black;
 }
