@@ -1,6 +1,6 @@
 from . import bp
-
+from flask import render_template
 
 @bp.route("/")
 def home():
-    return "Muthafucka!"
+    return render_template("home/home.html")
