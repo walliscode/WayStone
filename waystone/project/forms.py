@@ -20,6 +20,8 @@ class CurrentProjectsForm(FlaskForm):
         get_label=lambda project: "{} - {}".format(project.name, project.description),
     )
 
+    delete_project = SubmitField("Delete Project")
+
 
 class NewMilestoneForm(FlaskForm):
 
@@ -46,6 +48,8 @@ class CurrentMilestonesForm(FlaskForm):
             milestone.project.name,
         ),
     )
+
+    delete_milestone = SubmitField("Delete Milestone")
 
 
 class NewCriteriaForm(FlaskForm):
