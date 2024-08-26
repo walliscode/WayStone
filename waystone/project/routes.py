@@ -88,6 +88,7 @@ def link_milestones():
             )
             db.session.add(new_milestone_link)
             db.session.commit()
+            session.clear()
         if form.reset.data:
             session.clear()
 
@@ -99,15 +100,11 @@ def link_milestones():
             )
         ).all()
 
-        # update the query factory for projects by filtering out the child project so it can't link to istelf
-        form.project_choices.query_factory = lambda: db.session.scalars(
-            db.select(Project).filter(Project.id != session["child_project"]["id"])
-        ).all()
-
         if "parent_project" in session:
             form.milestone_choices.query_factory = lambda: db.session.scalars(
                 db.select(Milestone).filter(
-                    Milestone.project_id == session["parent_project"]["id"]
+                    Milestone.project_id == session["parent_project"]["id"],
+                    Milestone.id != session["child_milestone"]["id"],
                 )
             ).all()
 
