@@ -1,4 +1,5 @@
-from flask import render_template, request, session
+from flask import render_template, request, session, flash, redirect, url_for
+from sqlalchemy import or_
 
 
 from waystone.project import bp
@@ -35,6 +36,43 @@ def index():
             db.session.add(new_project)
             db.session.commit()
 
+        # delete project, we need to cascade delete the milestones and milestone criteria
+        if form2.delete_project.data:
+
+            project = form2.project_choices.data
+
+            milestones = db.session.scalars(
+                db.select(Milestone).filter(Milestone.project_id == project.id)
+            ).all()  # get all milestones for the project
+
+            for milestone in milestones:
+                print(milestone)
+                # delete all milestone criteria for the milestone
+                db.session.execute(
+                    db.delete(MilestoneCriteria).filter(
+                        MilestoneCriteria.milestone_id == milestone.id
+                    )
+                )
+                # delete all parent child relationships for the milestone if it is a parent or child
+                db.session.execute(
+                    db.delete(MileStoneParentChild).filter(
+                        or_(
+                            MileStoneParentChild.parent_id == milestone.id,
+                            MileStoneParentChild.child_id == milestone.id,
+                        )
+                    )
+                )
+                # delete the milestone
+                db.session.delete(milestone)
+
+            # delete the project
+            db.session.delete(project)
+            db.session.commit()
+
+            message = f"Project {project.name} deleted successfully"
+            flash(message)
+            # session.clear
+
     return render_template("project/index.html", form=form, form2=form2)
 
 
@@ -52,6 +90,30 @@ def milestone():
             )
             db.session.add(new_milestone)
             db.session.commit()
+        
+        if form2.delete_milestone.data:
+            milestone = form2.milestone_choices.data
+            db.session.execute(
+                db.delete(MilestoneCriteria).filter(
+                    MilestoneCriteria.milestone_id == milestone.id
+                )   
+            )
+            db.session.execute(
+                db.delete(MileStoneParentChild).filter(
+                    or_(
+                        MileStoneParentChild.parent_id == milestone.id,
+                        MileStoneParentChild.child_id == milestone.id,
+                    )
+                )
+            )
+            db.session.delete(milestone)
+            db.session.commit()
+            message = f"Milestone {milestone.name} deleted successfully"
+            flash(message)
+
+            return redirect(url_for("project.index"))
+    
+    
 
     return render_template("project/milestone.html", form=form, form2=form2)
 
@@ -89,6 +151,7 @@ def link_milestones():
             db.session.add(new_milestone_link)
             db.session.commit()
             session.clear()
+
         if form.reset.data:
             session.clear()
 

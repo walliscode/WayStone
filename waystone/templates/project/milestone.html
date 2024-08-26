@@ -29,14 +29,23 @@
 {% endblock %}
 
 {% block column_3 %}
-<form>
+<form method="post">
     <h2>Current Milestones</h2>
     <fieldset>
         <div class="dropdown">
             {{form2.milestone_choices}}
         </div>
 
-
     </fieldset>
+    <fieldset>
+        {{form2.delete_milestone (class = "btn btn-delete")}}
+    </fieldset>
+    {% if get_flashed_messages()%}
+    <div class = "message">
+        {% for message in get_flashed_messages() %}
+        <p>{{message}}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
 </form>
 {% endblock %}

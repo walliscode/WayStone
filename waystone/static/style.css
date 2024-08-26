@@ -2,7 +2,7 @@
     --color-background: #faf0ca;
     --color-box: #ee964b;
     --color-add: #0d3b66;
-    --color-remove: #f95738;
+    --color-delete: #f95738;
     --color-edit: #f4d35e;
 }
 
@@ -66,8 +66,8 @@ fieldset {
     color: white;
 }
 
-.btn-remove {
-    background: var(--color-remove);
+.btn-delete {
+    background: var(--color-delete);
     color: white;
 }
 
